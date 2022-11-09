@@ -1,8 +1,9 @@
-Select * from RawCovidData;
+Select * from RawCovidData
 
 --General overview of the Covid-19 Data
 Select Location, date, total_cases, new_cases, total_deaths, population
 from RawCovidData
+Where Continent is not Null
 Order by 1,2
 
 -- Looking at the Number of Cases, the Number of deaths, and the percentage of people who died from covid-19
@@ -11,13 +12,13 @@ from RawCovidData
 Order by 1,2
 
 --Looking at the percentage of the population that has gotten Covid-19 in Canada
-Select Location, date, total_cases, Population, (total_cases/Population)*100 As '%ofPopulationInfected'
+Select Location, Date, total_cases, Population, (total_cases/Population)*100 As '%ofPopulationInfected'
 from RawCovidData
-Where continent is not null and Location = 'Canada'
+Where continent is not null
 Order by 1,2
 
 --Ranking Countries by the percentage of the population that has been infected with Covid-19
-Select Location, Max(total_cases) As HighestCaseCountPerCountry, Population, MAX(total_cases/Population)*100 As '%ofPopulationInfected'
+Select Location, , Max(total_cases) As HighestCaseCountPerCountry, Population, MAX(total_cases/Population)*100 As '%ofPopulationInfected'
 from RawCovidData
 Where continent is not null
 Group by Location, Population
@@ -42,7 +43,7 @@ Select Date, Sum(new_cases) as 'Total Cases/Day'
 from RawCovidData
 Where Continent is not null
 Group by date
-order by date;
+order by date
 
 --Looking at Vaccinations per day and total Vaccinations, by country (location)
 
@@ -51,3 +52,10 @@ Select continent, location, date, population, new_vaccinations As 'New Vaccinati
 From RawCovidData
 Where Continent is not null
 Order By 2,3;
+
+--Looking at the number of people with 2 doses per country
+Select location,  Max(convert(bigint,people_fully_vaccinated)) / Max(population)*100 as '2 doses %'
+from RawCovidData
+Where Continent is not null
+Group by location
+order by location;
